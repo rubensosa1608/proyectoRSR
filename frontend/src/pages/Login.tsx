@@ -1,47 +1,108 @@
-import Typography from '@mui/material/Typography'; 
-import { Button } from '@mui/material';
-import { Container } from '@mui/material';
+import React, { useState } from 'react';
+import { TextField, Container, Button, Box, Typography, Paper, Alert } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
 
 function Login() {
+
+  const usuarioCorrecto = "admin";
+  const passwordCorrecta = "1234";
+
+  // Estado para manejar los valores del formulario
+  const [data, setData] = useState({
+    username: '',
+    password: '',
+  });
+
+  // Estado para manejar las alertas
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'warning' | null>(null);
+
+  // Manejar el cambio en los inputs
+  const handleChange = (e:any) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,  // Actualizamos la propiedad correcta (username o password)
+    });
+  };
+
+  // Manejar el envío del formulario
+  const handleSubmit = (e:any) => {
+    e.preventDefault();
+
+    // Verificación de credenciales
+    if (data.username === usuarioCorrecto && data.password === passwordCorrecta) {
+      setAlertMessage('Acceso exitoso.');
+      setAlertSeverity('success');
+    } else {
+      setAlertMessage('Usuario o contraseña incorrectos.');
+      setAlertSeverity('warning');
+    }
+  };
+
   return (
     <Container>
-      <header>
-        <Typography variant="h1" sx={{ color: 'secondary.main', marginBottom: 2 }}>
-          Pagina de Login de Rubén Sosa Ramos.
-        </Typography>
-      </header>
-      
-      <main>
-        <Typography variant="h2" sx={{ marginBottom: 2 }}>
-          Bienvenido
-        </Typography>
-        <Typography variant="h4" sx={{ color: 'secondary.main', marginBottom: 2 }}>
-          Inicia sesión para continuar
-        </Typography>
-        <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
-          Ingresa tus credenciales
-        </Typography>
-        <Typography variant="body1" sx={{ color: 'secondary.main', marginBottom: 4 }}>
-          Si no tienes cuenta, regístrate.
-        </Typography>
+      <header></header>
 
-        {/* Botones organizados */}
-        <Button variant="contained" color="secondary" sx={{ marginRight: 1 }}>
-          Iniciar sesión
-        </Button>
-        <Button variant="outlined" color="success" sx={{ marginRight: 1 }}>
-          Registrarse
-        </Button>
-        <Button variant="text" color="warning" sx={{ marginRight: 1 }}>
-          ¿Olvidaste tu contraseña?
-        </Button>
+      <main>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh',
+          }}
+        >
+          <Paper elevation={3} sx={{ padding: 4, width: 1000, textAlign: 'center' }}>
+            <Typography variant="h6" sx={{ fontFamily: 'monospace', marginBottom: 2 }}>
+              Sistema de acceso
+            </Typography>
+
+            <LockIcon sx={{ fontSize: 40, marginBottom: 2 }} />
+
+            <form onSubmit={handleSubmit}>
+              <TextField
+                fullWidth
+                label="Usuario"
+                name="username"
+                variant="outlined"
+                margin="normal"
+                value={data.username}
+                onChange={handleChange}
+                required
+              />
+
+              <TextField
+                fullWidth
+                label="Contraseña"
+                name="password"
+                type="password"
+                variant="outlined"
+                margin="normal"
+                value={data.password}
+                onChange={handleChange}
+                required
+              />
+
+              <Button
+                variant="contained"
+                fullWidth
+                type="submit"
+              >
+                ACCEDER
+              </Button>
+            </form>
+
+            {alertMessage && (
+              <Alert severity={alertSeverity} sx={{ marginTop: 2 }}>
+                {alertMessage}
+              </Alert>
+            )}
+          </Paper>
+        </Box>
       </main>
 
-      <footer>
-        <Typography variant="body2" color="textSecondary" sx={{ marginTop: 4 }}>
-          &copy; 2024 Rubén Sosa Ramos. Todos los derechos reservados.
-        </Typography>
-      </footer>
+      <footer></footer>
     </Container>
   );
 }
